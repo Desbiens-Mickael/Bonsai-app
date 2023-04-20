@@ -1,0 +1,36 @@
+services:
+  db: # Le nom du service est db (pour database)
+    restart: always # On redémarre le service en cas de plantage
+    image: postgres:15-alpine # On utilise l'image officielle de postgres
+    environment: # On définit les variables d'environnement
+      POSTGRES_PASSWORD: postgres # Le mot de passe de l'utilisateur postgres
+      PGUSER: postgres # Le nom de l'utilisateur postgres
+    ports:
+      - 5432:5432 # On expose le port 5432 de la machine hôte sur le port 5432 du container
+    healthcheck: # On définit un healthcheck pour vérifier que le service est opérationnel
+      test: ["CMD-SHELL", "pg_isready"] # On utilise la commande pg_isready pour vérifier que le service est opérationnel
+      interval: 10s # On vérifie toutes les 10 secondes
+      timeout: 5s # On attend 5 secondes avant de considérer que le service est down
+      retries: 5 # On réessaie 5 fois avant de considérer que le service est down
+
+  server:
+    restart: always
+    depends_on:
+      db: # On dépend du service db pour démarrer
+        condition: service_healthy # On attend que le service db soit opérationnel avant de démarrer
+    environment:
+      DB_HOST: db # On définit l'adresse de la base de données
+    build: ./server # On construit l'image à partir du Dockerfile présent dans le dossier server
+    ports:
+      - 4000:4000 # On expose le port 4000 de la machine hôte sur le port 4000 du container
+      - 4001:4001 # On expose le port 4001 de la machine hôte sur le port 4001 du container
+    volumes:
+      - ./server/src:/app/src # On monte le dossier src du projet dans le container pour pouvoir modifier les fichiers en live
+
+  client:
+    restart: always
+    build: ./client
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client/src:/app/src

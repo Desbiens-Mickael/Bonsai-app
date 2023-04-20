@@ -1,0 +1,23 @@
+query GetCurrentUser {
+  getCurrentUser {
+    id
+    firstname
+    email
+    password
+    role
+    createdAt
+    updatedAt
+    bonsais {
+      id
+      name
+      species
+      age
+      photo
+      createdAt
+      updatedAt
+      repotting
+      nextRepotting
+      ligaturing
+    }
+  }
+}

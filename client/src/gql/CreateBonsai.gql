@@ -1,0 +1,14 @@
+mutation CreateBonsai($data: BonsaiInput!) {
+  createBonsai(data: $data) {
+    id
+    name
+    species
+    age
+    photo
+    createdAt
+    updatedAt
+    repotting
+    nextRepotting
+    ligaturing
+  }
+}
