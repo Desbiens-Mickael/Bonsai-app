@@ -1,0 +1,15 @@
+query GetBonsaisByUser($userId: Int!) {
+  getBonsaisByUser(userId: $userId) {
+    id
+    name
+    species
+    age
+    photo
+    createdAt
+    updatedAt
+    repotting
+    nextRepotting
+    ligaturing
+    deligaturing
+  }
+}
