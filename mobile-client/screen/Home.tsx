@@ -1,26 +1,30 @@
 import { View, Button, Text, StyleSheet } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import client from "../gql/client";
 
-export default function HomeScreen({ navigation }: any) {
+interface isLoginProps {
+  navigation: any;
+  isLogin: (isLogin: boolean) => void;
+}
+
+export default function HomeScreen({ navigation, isLogin }: isLoginProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Hello World!</Text>
       <Button
-        title="Bonsai 1"
-        onPress={() =>
-          navigation.navigate("ShowBonsai", { bonsaiId: 1, name: "Bonsai 1" })
-        }
+        title="Mes Bonsais"
+        onPress={() => navigation.navigate("Mes bonsais")}
       />
       <Button
-        title="Bonsai 2"
-        onPress={() =>
-          navigation.navigate("ShowBonsai", { bonsaiId: 2, name: "Bonsai 2" })
-        }
-      />
-      <Button
-        title="Bonsai 3"
-        onPress={() =>
-          navigation.navigate("ShowBonsai", { bonsaiId: 3, name: "Bonsai 3" })
-        }
+        title="Déconnexion"
+        onPress={async () => {
+          await SecureStore.deleteItemAsync("token");
+          isLogin(false);
+          client.resetStore();
+          console.log("tokenHome", await SecureStore.getItemAsync("token"));
+
+          // navigation.navigate("Login");
+        }}
       />
     </View>
   );

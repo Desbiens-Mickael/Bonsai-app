@@ -10,7 +10,7 @@ export default function App() {
       <NavigationContainer>
         <MyStack />
       </NavigationContainer>
-      <StatusBar style="auto" />
+      <StatusBar style={"auto"} />
     </ApolloProvider>
   );
 }

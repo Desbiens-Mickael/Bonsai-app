@@ -142,6 +142,18 @@ export type UserLoginInput = {
   password: Scalars['String'];
 };
 
+export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, firstname: string, email: string, password: string, role: string, createdAt: any, updatedAt?: any | null, bonsais?: Array<{ __typename?: 'Bonsai', id: number, name: string, species: string, age?: number | null, photo?: string | null, createdAt: any, updatedAt?: any | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null }> | null } };
+
+export type LoginMutationVariables = Exact<{
+  data: UserLoginInput;
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: string };
+
 export type GetBonsaiByIdQueryVariables = Exact<{
   bonsaiId: Scalars['Int'];
 }>;
@@ -149,7 +161,97 @@ export type GetBonsaiByIdQueryVariables = Exact<{
 
 export type GetBonsaiByIdQuery = { __typename?: 'Query', getBonsaiById: { __typename?: 'Bonsai', name: string, species: string, age?: number | null, photo?: string | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null, deligaturing?: any | null } };
 
+export type GetBonsaisByUserQueryVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
 
+
+export type GetBonsaisByUserQuery = { __typename?: 'Query', getBonsaisByUser: Array<{ __typename?: 'Bonsai', id: number, name: string, species: string, age?: number | null, photo?: string | null, createdAt: any, updatedAt?: any | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null, deligaturing?: any | null }> };
+
+
+export const GetCurrentUserDocument = gql`
+    query GetCurrentUser {
+  getCurrentUser {
+    id
+    firstname
+    email
+    password
+    role
+    createdAt
+    updatedAt
+    bonsais {
+      id
+      name
+      species
+      age
+      photo
+      createdAt
+      updatedAt
+      repotting
+      nextRepotting
+      ligaturing
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCurrentUserQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
+      }
+export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
+        }
+export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
+export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
+export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const LoginDocument = gql`
+    mutation Login($data: userLoginInput!) {
+  login(data: $data)
+}
+    `;
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+      }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const GetBonsaiByIdDocument = gql`
     query GetBonsaiById($bonsaiId: Int!) {
   getBonsaiById(id: $bonsaiId) {
@@ -192,3 +294,48 @@ export function useGetBonsaiByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetBonsaiByIdQueryHookResult = ReturnType<typeof useGetBonsaiByIdQuery>;
 export type GetBonsaiByIdLazyQueryHookResult = ReturnType<typeof useGetBonsaiByIdLazyQuery>;
 export type GetBonsaiByIdQueryResult = Apollo.QueryResult<GetBonsaiByIdQuery, GetBonsaiByIdQueryVariables>;
+export const GetBonsaisByUserDocument = gql`
+    query GetBonsaisByUser($userId: Int!) {
+  getBonsaisByUser(userId: $userId) {
+    id
+    name
+    species
+    age
+    photo
+    createdAt
+    updatedAt
+    repotting
+    nextRepotting
+    ligaturing
+    deligaturing
+  }
+}
+    `;
+
+/**
+ * __useGetBonsaisByUserQuery__
+ *
+ * To run a query within a React component, call `useGetBonsaisByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBonsaisByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBonsaisByUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetBonsaisByUserQuery(baseOptions: Apollo.QueryHookOptions<GetBonsaisByUserQuery, GetBonsaisByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBonsaisByUserQuery, GetBonsaisByUserQueryVariables>(GetBonsaisByUserDocument, options);
+      }
+export function useGetBonsaisByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBonsaisByUserQuery, GetBonsaisByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBonsaisByUserQuery, GetBonsaisByUserQueryVariables>(GetBonsaisByUserDocument, options);
+        }
+export type GetBonsaisByUserQueryHookResult = ReturnType<typeof useGetBonsaisByUserQuery>;
+export type GetBonsaisByUserLazyQueryHookResult = ReturnType<typeof useGetBonsaisByUserLazyQuery>;
+export type GetBonsaisByUserQueryResult = Apollo.QueryResult<GetBonsaisByUserQuery, GetBonsaisByUserQueryVariables>;
