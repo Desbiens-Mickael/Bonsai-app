@@ -16,10 +16,10 @@ import client from "../gql/client";
 
 interface isLoginProps {
   navigation: any;
-  isLogin: (isLogin: boolean) => void;
+  setIsSignedIn: (isLogin: boolean) => void;
 }
 
-export default function Login({ navigation, isLogin }: isLoginProps) {
+export default function Login({ navigation, setIsSignedIn }: isLoginProps) {
   const [email, setEmail] = useState("user@test.com");
   const [password, setPassword] = useState("test1234");
   const [error, setError] = useState("");
@@ -43,7 +43,7 @@ export default function Login({ navigation, isLogin }: isLoginProps) {
         JSON.stringify(token?.data?.login)
       );
       // navigation.navigate("Home");
-      isLogin(true);
+      setIsSignedIn(true);
       console.log("tokenLogin", token?.data?.login);
 
       setError("");
@@ -148,10 +148,10 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: "80%",
-    padding: 10,
+    padding: 15,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 20,
+    borderRadius: 30,
   },
   buttonSubmit: {
     color: "#fff",
