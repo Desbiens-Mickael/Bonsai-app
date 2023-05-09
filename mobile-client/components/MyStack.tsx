@@ -10,6 +10,7 @@ import Login from "../screen/Login";
 import Home from "../screen/Home";
 import BonsaiList from "../screen/BonsaiList";
 import MyTab from "./MyTab";
+import MyDrawer from "./MyDrawer";
 
 const Stack = createStackNavigator();
 
@@ -43,7 +44,7 @@ export default function MyStack() {
       {isSignedIn ? (
         <>
           <Stack.Screen name="Home_stack" options={{ headerShown: false }}>
-            {(props) => <MyTab {...props} isLogin={setIsSignedIn} />}
+            {(props) => <MyDrawer {...props} setIsSignedIn={setIsSignedIn} />}
           </Stack.Screen>
 
           <Stack.Screen
@@ -60,7 +61,7 @@ export default function MyStack() {
       ) : (
         <>
           <Stack.Screen name="Login">
-            {(props) => <Login {...props} isLogin={setIsSignedIn} />}
+            {(props) => <Login {...props} setIsSignedIn={setIsSignedIn} />}
           </Stack.Screen>
 
           {/* <Stack.Screen name="SignUp" component={SignUpScreen} /> */}
