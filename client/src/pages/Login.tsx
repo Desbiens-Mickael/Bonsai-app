@@ -16,8 +16,8 @@ import {
 } from "@chakra-ui/react";
 
 const Login = () => {
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("test1234");
+  const [email, setEmail] = useState("user@test.com");
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -27,11 +27,11 @@ const Login = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const user = await login({
+      await login({
         variables: { data: { email, password } },
       });
-      window.localStorage.setItem("IsLoged", "true");
-      navigate("/");
+      // window.localStorage.setItem("IsLoged", "true");
+      // navigate("/");
     } catch (err) {
       setErrors({ err });
       console.error("error", err);

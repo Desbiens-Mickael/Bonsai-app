@@ -33,9 +33,9 @@ export default function NavBar() {
   const { email, id } = data?.getCurrentUser || {};
   const colorModel = useColorModeValue("gray.100", "gray.900");
 
-  useEffect(() => {
-    refetch();
-  }, [email]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [email]);
 
   if (error) return <div>Error</div>;
 
@@ -113,7 +113,7 @@ export default function NavBar() {
                       to="#"
                       onClick={async () => {
                         await logout();
-                        window.localStorage.removeItem("IsLoged");
+                        // window.localStorage.removeItem("IsLoged");
                         client.resetStore();
                       }}
                     >

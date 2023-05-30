@@ -10,18 +10,20 @@ import { useState, useEffect } from "react";
 import CreateBonsai from "./pages/CreateBonsai";
 import ShowBonsaisList from "./pages/ShowBonsaisList";
 import EditeBonsai from "./pages/EditeBonsai";
+import { useGetCurrentUserQuery } from "./gql/generated/schema";
 
 function App() {
-  const [IsLoged, setIsLoged] = useState(false);
-  console.log(IsLoged);
-
-  useEffect(() => {
-    setIsLoged(!!window.localStorage.getItem("IsLoged"));
-  }, []);
+  const {
+    data: CurentUser,
+    loading,
+    error,
+  } = useGetCurrentUserQuery({
+    errorPolicy: "ignore",
+  });
 
   return (
     <Routes>
-      <Route element={<ProtectedRoute isAllowed={!IsLoged} />}>
+      <Route element={<ProtectedRoute isAllowed={CurentUser ? false : true} />}>
         <Route
           path="/register"
           element={<Register />}
@@ -30,7 +32,12 @@ function App() {
         <Route path="/auth" element={<Login />} errorElement={<ErrorPage />} />
       </Route>
       <Route
-        element={<ProtectedRoute isAllowed={IsLoged} redirectTo="/auth" />}
+        element={
+          <ProtectedRoute
+            isAllowed={CurentUser ? true : false}
+            redirectTo="/auth"
+          />
+        }
       >
         <Route
           path="/profile/:id"

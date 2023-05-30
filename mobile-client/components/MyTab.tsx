@@ -1,12 +1,12 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import HomeScreen from "../screen/Home";
 import BonsaiList from "../screen/BonsaiList";
+import Home from "../screen/Home";
 
 const Tab = createBottomTabNavigator();
 
-export default function MyTab({ isLogin }: any) {
+export default function MyTab() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -28,9 +28,13 @@ export default function MyTab({ isLogin }: any) {
         tabBarInactiveTintColor: "gray",
       })}
     >
-      <Tab.Screen name="Home">
-        {(props) => <HomeScreen {...props} isLogin={isLogin} />}
-      </Tab.Screen>
+      <Tab.Screen
+        name="Home"
+        options={{
+          headerTitle: "Accueil",
+        }}
+        component={Home}
+      />
       <Tab.Screen name="Mes bonsais" component={BonsaiList} />
     </Tab.Navigator>
   );
