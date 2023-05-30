@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Button,
@@ -14,12 +14,7 @@ import * as SecureStore from "expo-secure-store";
 import { useLoginMutation } from "../gql/generated/schema";
 import client from "../gql/client";
 
-interface isLoginProps {
-  navigation: any;
-  setIsSignedIn: (isLogin: boolean) => void;
-}
-
-export default function Login({ navigation, setIsSignedIn }: isLoginProps) {
+export default function Login() {
   const [email, setEmail] = useState("user@test.com");
   const [password, setPassword] = useState("test1234");
   const [error, setError] = useState("");
@@ -37,15 +32,9 @@ export default function Login({ navigation, setIsSignedIn }: isLoginProps) {
           },
         },
       });
-      if (token) client.resetStore();
-      await SecureStore.setItemAsync(
-        "token",
-        JSON.stringify(token?.data?.login)
-      );
-      // navigation.navigate("Home");
-      setIsSignedIn(true);
+      if (token)
+        SecureStore.setItemAsync("token", JSON.stringify(token?.data?.login));
       console.log("tokenLogin", token?.data?.login);
-
       setError("");
     } catch (error) {
       setError("Identifiant ou mot de passe incorrect");
@@ -90,7 +79,6 @@ export default function Login({ navigation, setIsSignedIn }: isLoginProps) {
         )}
       </View>
       <Text style={styles.textError}>{error}</Text>
-      {/* navigation.navigate("Home") */}
       <View style={styles.boxButton}>
         <LinearGradient
           colors={["#B57CFC", "#7100FE"]}

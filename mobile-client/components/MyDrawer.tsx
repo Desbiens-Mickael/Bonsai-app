@@ -8,10 +8,12 @@ import BonsaiList from "../screen/BonsaiList";
 import MyTab from "./MyTab";
 import * as SecureStore from "expo-secure-store";
 import client from "../gql/client";
+import { useLogoutMutation } from "../gql/generated/schema";
 
 const Drawer = createDrawerNavigator();
 
-export default function MyDrawer({ setIsSignedIn }: any) {
+export default function MyDrawer() {
+  const [Logout] = useLogoutMutation();
   return (
     <Drawer.Navigator
       initialRouteName="Home"
@@ -22,13 +24,15 @@ export default function MyDrawer({ setIsSignedIn }: any) {
             <DrawerItem
               label="Déconnexion"
               onPress={async () => {
-                await SecureStore.deleteItemAsync("token");
-                setIsSignedIn(false);
-                client.resetStore();
-                console.log(
-                  "tokenHome",
-                  await SecureStore.getItemAsync("token")
-                );
+                try {
+                  await Logout();
+                  SecureStore.deleteItemAsync("token");
+                } catch (error) {
+                  console.log(error);
+                } finally {
+                  client.resetStore();
+                  props.navigation.closeDrawer();
+                }
               }}
             />
           </DrawerContentScrollView>
@@ -40,9 +44,8 @@ export default function MyDrawer({ setIsSignedIn }: any) {
         options={{
           headerTitle: "Accueil",
         }}
-      >
-        {(props) => <MyTab {...props} setIsSignedIn={setIsSignedIn} />}
-      </Drawer.Screen>
+        component={MyTab}
+      />
     </Drawer.Navigator>
   );
 }
