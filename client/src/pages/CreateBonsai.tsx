@@ -5,10 +5,14 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  Select,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
 import Layout from "../containers/Layout";
-import { useCreateBonsaiMutation } from "../gql/generated/schema";
+import {
+  useCreateBonsaiMutation,
+  useGetSpeciesQuery,
+} from "../gql/generated/schema";
 
 const CreateBonsai = () => {
   const [name, setName] = useState<string>("");
@@ -17,6 +21,8 @@ const CreateBonsai = () => {
   const [photo, setPhoto] = useState<string>("");
   const [CreateBonsai, { loading, error, client }] = useCreateBonsaiMutation();
 
+  const { data: dataSpecies } = useGetSpeciesQuery();
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -24,7 +30,7 @@ const CreateBonsai = () => {
         variables: {
           data: {
             name,
-            species,
+            specieId: parseInt(species, 10),
             age,
             photo,
           },
@@ -67,18 +73,22 @@ const CreateBonsai = () => {
           />
           <FormHelperText>Texte d'aide de test</FormHelperText>
         </FormControl>
-        <FormControl as="fieldset">
+        <FormControl as="fieldset" mb={6}>
           <FormLabel as="legend" htmlFor={"species"}>
             Espèce du bonsaï
           </FormLabel>
-          <Input
-            type={"text"}
-            name="species"
+          {/* <AutocompleteMultiple suggestions={test} /> */}
+          <Select
+            placeholder="Choisiez une espèce"
             variant="outline"
-            placeholder="Espèce"
-            value={species}
             onChange={(e) => setSpecies(e.target.value)}
-          />
+          >
+            {dataSpecies?.species.map((specie) => (
+              <option key={specie.id} value={specie.id}>
+                {specie.name}
+              </option>
+            ))}
+          </Select>
           <FormHelperText>Texte d'aide de test</FormHelperText>
         </FormControl>
         <FormControl as="fieldset">

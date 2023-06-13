@@ -28,7 +28,7 @@ export type Bonsai = {
   owner: User;
   photo?: Maybe<Scalars['String']>;
   repotting?: Maybe<Scalars['DateTime']>;
-  species: Scalars['String'];
+  specie?: Maybe<Specie>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -36,17 +36,23 @@ export type BonsaiInput = {
   age?: InputMaybe<Scalars['Int']>;
   name: Scalars['String'];
   photo?: InputMaybe<Scalars['String']>;
-  species: Scalars['String'];
+  specieId: Scalars['Int'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   createBonsai: Bonsai;
+  createPropagationMethod: PropagationMethod;
+  createSpecie: Specie;
   createUser: User;
+  deleteBonsai: Scalars['Boolean'];
+  deleteSpecie: Scalars['Boolean'];
   deleteUser: Scalars['Boolean'];
   login: Scalars['String'];
   logout: Scalars['Boolean'];
   updateBonsai: Bonsai;
+  updatePropagationMethod: PropagationMethod;
+  updateSpecie: Specie;
   updateUser: User;
 };
 
@@ -56,8 +62,28 @@ export type MutationCreateBonsaiArgs = {
 };
 
 
+export type MutationCreatePropagationMethodArgs = {
+  data: PropagationMethodeInput;
+};
+
+
+export type MutationCreateSpecieArgs = {
+  data: SpecieInput;
+};
+
+
 export type MutationCreateUserArgs = {
   data: UserInput;
+};
+
+
+export type MutationDeleteBonsaiArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteSpecieArgs = {
+  specieId: Scalars['Int'];
 };
 
 
@@ -77,9 +103,86 @@ export type MutationUpdateBonsaiArgs = {
 };
 
 
+export type MutationUpdatePropagationMethodArgs = {
+  data: PropagationMethodeInput;
+  id: Scalars['Float'];
+};
+
+
+export type MutationUpdateSpecieArgs = {
+  data: SpecieInput;
+  specieId: Scalars['Int'];
+};
+
+
 export type MutationUpdateUserArgs = {
   data: UserInput;
   id: Scalars['Int'];
+};
+
+export type PropagationMethod = {
+  __typename?: 'PropagationMethod';
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  species: Array<Specie>;
+  steps?: Maybe<Array<PropagationSteps>>;
+};
+
+export type PropagationMethodeInput = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+  speciesIds: Array<Scalars['Int']>;
+  stepsIds?: InputMaybe<Array<Scalars['Int']>>;
+};
+
+export type PropagationStepInput = {
+  explanation: Scalars['String'];
+  photo?: InputMaybe<Scalars['String']>;
+  stepNumber: Scalars['Int'];
+  title: Scalars['String'];
+};
+
+export type PropagationSteps = {
+  __typename?: 'PropagationSteps';
+  explanation?: Maybe<Scalars['String']>;
+  id: Scalars['Float'];
+  photo?: Maybe<Scalars['String']>;
+  propagationMethod: PropagationMethod;
+  stepNumber: Scalars['Float'];
+  title: Scalars['String'];
+};
+
+export type PruningMethod = {
+  __typename?: 'PruningMethod';
+  description: Scalars['String'];
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  species: Array<Specie>;
+  steps?: Maybe<Array<PruningStep>>;
+};
+
+export type PruningMethodeInput = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+  stepsIds: Array<Scalars['Int']>;
+};
+
+export type PruningStep = {
+  __typename?: 'PruningStep';
+  explanation?: Maybe<Scalars['String']>;
+  id: Scalars['Float'];
+  photo?: Maybe<Scalars['String']>;
+  pruningMethod: PruningMethod;
+  stepNumber: Scalars['Float'];
+  title: Scalars['String'];
+};
+
+export type PruningStepInput = {
+  explanation: Scalars['String'];
+  photo?: InputMaybe<Scalars['String']>;
+  stepNumber: Scalars['Int'];
+  title: Scalars['String'];
 };
 
 export type Query = {
@@ -89,6 +192,13 @@ export type Query = {
   getBonsaisByUser: Array<Bonsai>;
   getCurrentUser: User;
   getUserById: User;
+  propagationMethod: PropagationMethod;
+  propagationMethods: Array<PropagationMethod>;
+  propagationSteps: Array<PropagationSteps>;
+  pruningMethods: Array<PruningMethod>;
+  pruningSteps: Array<PruningStep>;
+  specie: Specie;
+  species: Array<Specie>;
   users: Array<User>;
 };
 
@@ -98,13 +208,34 @@ export type QueryGetBonsaiByIdArgs = {
 };
 
 
-export type QueryGetBonsaisByUserArgs = {
-  userId: Scalars['Int'];
+export type QueryGetUserByIdArgs = {
+  id: Scalars['Int'];
 };
 
 
-export type QueryGetUserByIdArgs = {
-  id: Scalars['Int'];
+export type QueryPropagationMethodArgs = {
+  id: Scalars['Float'];
+};
+
+export type Specie = {
+  __typename?: 'Specie';
+  bonsais: Array<Bonsai>;
+  culture?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  photo?: Maybe<Scalars['String']>;
+  propagationMethods: Array<PropagationMethod>;
+  pruningMethods: Array<PruningMethod>;
+};
+
+export type SpecieInput = {
+  culture?: InputMaybe<Scalars['String']>;
+  description: Scalars['String'];
+  name: Scalars['String'];
+  photo?: InputMaybe<Scalars['String']>;
+  propagationMethodId?: InputMaybe<Array<Scalars['Int']>>;
+  pruningMethodId?: InputMaybe<Array<Scalars['Int']>>;
 };
 
 export type UpdateBonsaiInput = {
@@ -115,7 +246,7 @@ export type UpdateBonsaiInput = {
   nextRepotting?: InputMaybe<Scalars['DateTime']>;
   photo?: InputMaybe<Scalars['String']>;
   repotting?: InputMaybe<Scalars['DateTime']>;
-  species: Scalars['String'];
+  specieId: Scalars['Int'];
 };
 
 export type User = {
@@ -147,7 +278,7 @@ export type CreateBonsaiMutationVariables = Exact<{
 }>;
 
 
-export type CreateBonsaiMutation = { __typename?: 'Mutation', createBonsai: { __typename?: 'Bonsai', id: number, name: string, species: string, age?: number | null, photo?: string | null, createdAt: any, updatedAt?: any | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null } };
+export type CreateBonsaiMutation = { __typename?: 'Mutation', createBonsai: { __typename?: 'Bonsai', id: number, name: string, age?: number | null, photo?: string | null, createdAt: any, updatedAt?: any | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null, specie?: { __typename?: 'Specie', id: number, name: string } | null } };
 
 export type CreateUserMutationVariables = Exact<{
   data: UserInput;
@@ -159,7 +290,12 @@ export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __type
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, firstname: string, email: string, password: string, role: string, createdAt: any, updatedAt?: any | null, bonsais?: Array<{ __typename?: 'Bonsai', id: number, name: string, species: string, age?: number | null, photo?: string | null, createdAt: any, updatedAt?: any | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null }> | null } };
+export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser: { __typename?: 'User', id: number, firstname: string, email: string, password: string, role: string, createdAt: any, updatedAt?: any | null, bonsais?: Array<{ __typename?: 'Bonsai', id: number, name: string, age?: number | null, photo?: string | null, createdAt: any, updatedAt?: any | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null, specie?: { __typename?: 'Specie', name: string } | null }> | null } };
+
+export type GetSpeciesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSpeciesQuery = { __typename?: 'Query', species: Array<{ __typename?: 'Specie', id: number, name: string }> };
 
 export type GetUserByIdQueryVariables = Exact<{
   UserdId: Scalars['Int'];
@@ -182,11 +318,11 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
 export type UpdateBonsaiMutationVariables = Exact<{
   data: UpdateBonsaiInput;
-  bonsaiId: Scalars['Int'];
+  updateBonsaiId: Scalars['Int'];
 }>;
 
 
-export type UpdateBonsaiMutation = { __typename?: 'Mutation', updateBonsai: { __typename?: 'Bonsai', name: string, species: string, age?: number | null, photo?: string | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null, deligaturing?: any | null } };
+export type UpdateBonsaiMutation = { __typename?: 'Mutation', updateBonsai: { __typename?: 'Bonsai', name: string, age?: number | null, photo?: string | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null, deligaturing?: any | null, specie?: { __typename?: 'Specie', id: number, name: string } | null } };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UserInput;
@@ -201,14 +337,12 @@ export type GetBonsaiByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetBonsaiByIdQuery = { __typename?: 'Query', getBonsaiById: { __typename?: 'Bonsai', name: string, species: string, age?: number | null, photo?: string | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null, deligaturing?: any | null } };
+export type GetBonsaiByIdQuery = { __typename?: 'Query', getBonsaiById: { __typename?: 'Bonsai', name: string, age?: number | null, photo?: string | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null, deligaturing?: any | null, specie?: { __typename?: 'Specie', id: number, name: string } | null } };
 
-export type GetBonsaisByUserQueryVariables = Exact<{
-  userId: Scalars['Int'];
-}>;
+export type GetBonsaisByUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBonsaisByUserQuery = { __typename?: 'Query', getBonsaisByUser: Array<{ __typename?: 'Bonsai', id: number, name: string, species: string, age?: number | null, photo?: string | null, createdAt: any, updatedAt?: any | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null, deligaturing?: any | null }> };
+export type GetBonsaisByUserQuery = { __typename?: 'Query', getBonsaisByUser: Array<{ __typename?: 'Bonsai', id: number, name: string, age?: number | null, photo?: string | null, createdAt: any, updatedAt?: any | null, repotting?: any | null, nextRepotting?: any | null, ligaturing?: any | null, deligaturing?: any | null, specie?: { __typename?: 'Specie', id: number, name: string } | null }> };
 
 
 export const CreateBonsaiDocument = gql`
@@ -216,7 +350,10 @@ export const CreateBonsaiDocument = gql`
   createBonsai(data: $data) {
     id
     name
-    species
+    specie {
+      id
+      name
+    }
     age
     photo
     createdAt
@@ -304,7 +441,9 @@ export const GetCurrentUserDocument = gql`
     bonsais {
       id
       name
-      species
+      specie {
+        name
+      }
       age
       photo
       createdAt
@@ -343,6 +482,41 @@ export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const GetSpeciesDocument = gql`
+    query GetSpecies {
+  species {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetSpeciesQuery__
+ *
+ * To run a query within a React component, call `useGetSpeciesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSpeciesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSpeciesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetSpeciesQuery(baseOptions?: Apollo.QueryHookOptions<GetSpeciesQuery, GetSpeciesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSpeciesQuery, GetSpeciesQueryVariables>(GetSpeciesDocument, options);
+      }
+export function useGetSpeciesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSpeciesQuery, GetSpeciesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSpeciesQuery, GetSpeciesQueryVariables>(GetSpeciesDocument, options);
+        }
+export type GetSpeciesQueryHookResult = ReturnType<typeof useGetSpeciesQuery>;
+export type GetSpeciesLazyQueryHookResult = ReturnType<typeof useGetSpeciesLazyQuery>;
+export type GetSpeciesQueryResult = Apollo.QueryResult<GetSpeciesQuery, GetSpeciesQueryVariables>;
 export const GetUserByIdDocument = gql`
     query GetUserById($UserdId: Int!) {
   getUserById(id: $UserdId) {
@@ -444,16 +618,19 @@ export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const UpdateBonsaiDocument = gql`
-    mutation UpdateBonsai($data: UpdateBonsaiInput!, $bonsaiId: Int!) {
-  updateBonsai(data: $data, id: $bonsaiId) {
+    mutation UpdateBonsai($data: UpdateBonsaiInput!, $updateBonsaiId: Int!) {
+  updateBonsai(data: $data, id: $updateBonsaiId) {
     name
-    species
     age
     photo
     repotting
     nextRepotting
     ligaturing
     deligaturing
+    specie {
+      id
+      name
+    }
   }
 }
     `;
@@ -473,7 +650,7 @@ export type UpdateBonsaiMutationFn = Apollo.MutationFunction<UpdateBonsaiMutatio
  * const [updateBonsaiMutation, { data, loading, error }] = useUpdateBonsaiMutation({
  *   variables: {
  *      data: // value for 'data'
- *      bonsaiId: // value for 'bonsaiId'
+ *      updateBonsaiId: // value for 'updateBonsaiId'
  *   },
  * });
  */
@@ -528,7 +705,10 @@ export const GetBonsaiByIdDocument = gql`
     query GetBonsaiById($bonsaiId: Int!) {
   getBonsaiById(id: $bonsaiId) {
     name
-    species
+    specie {
+      id
+      name
+    }
     age
     photo
     repotting
@@ -567,11 +747,14 @@ export type GetBonsaiByIdQueryHookResult = ReturnType<typeof useGetBonsaiByIdQue
 export type GetBonsaiByIdLazyQueryHookResult = ReturnType<typeof useGetBonsaiByIdLazyQuery>;
 export type GetBonsaiByIdQueryResult = Apollo.QueryResult<GetBonsaiByIdQuery, GetBonsaiByIdQueryVariables>;
 export const GetBonsaisByUserDocument = gql`
-    query GetBonsaisByUser($userId: Int!) {
-  getBonsaisByUser(userId: $userId) {
+    query GetBonsaisByUser {
+  getBonsaisByUser {
     id
     name
-    species
+    specie {
+      id
+      name
+    }
     age
     photo
     createdAt
@@ -596,11 +779,10 @@ export const GetBonsaisByUserDocument = gql`
  * @example
  * const { data, loading, error } = useGetBonsaisByUserQuery({
  *   variables: {
- *      userId: // value for 'userId'
  *   },
  * });
  */
-export function useGetBonsaisByUserQuery(baseOptions: Apollo.QueryHookOptions<GetBonsaisByUserQuery, GetBonsaisByUserQueryVariables>) {
+export function useGetBonsaisByUserQuery(baseOptions?: Apollo.QueryHookOptions<GetBonsaisByUserQuery, GetBonsaisByUserQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetBonsaisByUserQuery, GetBonsaisByUserQueryVariables>(GetBonsaisByUserDocument, options);
       }

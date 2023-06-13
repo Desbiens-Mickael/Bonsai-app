@@ -2,6 +2,7 @@ import { MaxLength } from "class-validator";
 import { Field, InputType, Int, ObjectType } from "type-graphql";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import User from "./User";
+import Specie from "./Specie";
 
 @Entity()
 @ObjectType()
@@ -14,9 +15,12 @@ class Bonsai {
   @Column()
   name: string;
 
-  @Field()
-  @Column()
-  species: string;
+  @Field(() => Specie, { nullable: true })
+  @ManyToOne(() => Specie, (specie) => specie.bonsais, {
+    nullable: true,
+    onDelete: "SET NULL",
+  })
+  specie: Specie | null;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
@@ -63,9 +67,8 @@ export class BonsaiInput {
   @MaxLength(150)
   name: string;
 
-  @Field()
-  @MaxLength(150)
-  species: string;
+  @Field(() => Int)
+  specieId: number;
 
   @Field(() => Int, { nullable: true })
   age: number;
@@ -80,9 +83,8 @@ export class UpdateBonsaiInput {
   @MaxLength(150)
   name: string;
 
-  @Field()
-  @MaxLength(150)
-  species: string;
+  @Field(() => Int)
+  specieId: number;
 
   @Field(() => Int, { nullable: true })
   age: number;

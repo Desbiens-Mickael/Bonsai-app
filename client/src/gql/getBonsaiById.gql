@@ -1,7 +1,10 @@
 query GetBonsaiById($bonsaiId: Int!) {
   getBonsaiById(id: $bonsaiId) {
     name
-    species
+    specie {
+      id
+      name
+    }
     age
     photo
     repotting
