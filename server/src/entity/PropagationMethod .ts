@@ -27,7 +27,8 @@ class PropagationMethod {
   @Field(() => [PropagationSteps], { nullable: true })
   @OneToMany(
     () => PropagationSteps,
-    (propagationSteps) => propagationSteps.propagationMethod
+    (propagationSteps) => propagationSteps.propagationMethod,
+    { cascade: true }
   )
   steps: PropagationSteps[] | null;
 

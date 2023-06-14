@@ -29,7 +29,8 @@ class PropagationSteps {
   @Field(() => PropagationMethod)
   @ManyToOne(
     () => PropagationMethod,
-    (propagationMethod) => propagationMethod.steps
+    (propagationMethod) => propagationMethod.steps,
+    { onDelete: "CASCADE" }
   )
   propagationMethod: PropagationMethod;
 }

@@ -13,16 +13,18 @@ import {
   useCreateBonsaiMutation,
   useGetSpeciesQuery,
 } from "../gql/generated/schema";
+import AutocompleteMultiple from "../components/AutocompleteMultiple";
+import Loader from "../components/Loader";
 
 const CreateBonsai = () => {
   const [name, setName] = useState<string>("");
-  const [species, setSpecies] = useState<string>("");
+  const [specie, setSpecie] = useState<number>(0);
   const [age, setAge] = useState<number>(0);
   const [photo, setPhoto] = useState<string>("");
-  const [CreateBonsai, { loading, error, client }] = useCreateBonsaiMutation();
+  const [CreateBonsai, { loading: createLoading, error, client }] =
+    useCreateBonsaiMutation();
 
-  const { data: dataSpecies } = useGetSpeciesQuery();
-
+  const { data: dataSpecies, loading: speciesLoading } = useGetSpeciesQuery();
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -30,7 +32,7 @@ const CreateBonsai = () => {
         variables: {
           data: {
             name,
-            specieId: parseInt(species, 10),
+            specieId: specie,
             age,
             photo,
           },
@@ -41,11 +43,13 @@ const CreateBonsai = () => {
       console.error(error);
     } finally {
       setName("");
-      setSpecies("");
+      setSpecie(0);
       setAge(0);
       setPhoto("");
     }
   };
+
+  if (speciesLoading || !dataSpecies) return <Loader />;
 
   return (
     <Layout>
@@ -77,18 +81,14 @@ const CreateBonsai = () => {
           <FormLabel as="legend" htmlFor={"species"}>
             Espèce du bonsaï
           </FormLabel>
-          {/* <AutocompleteMultiple suggestions={test} /> */}
-          <Select
-            placeholder="Choisiez une espèce"
-            variant="outline"
-            onChange={(e) => setSpecies(e.target.value)}
-          >
-            {dataSpecies?.species.map((specie) => (
-              <option key={specie.id} value={specie.id}>
-                {specie.name}
-              </option>
-            ))}
-          </Select>
+          <AutocompleteMultiple
+            suggestions={dataSpecies?.species}
+            value={(selectedSpecie) => {
+              if (selectedSpecie) {
+                setSpecie(selectedSpecie as number);
+              }
+            }}
+          />
           <FormHelperText>Texte d'aide de test</FormHelperText>
         </FormControl>
         <FormControl as="fieldset">
@@ -116,7 +116,11 @@ const CreateBonsai = () => {
           />
           <FormHelperText>Texte d'aide de test</FormHelperText>
         </FormControl>
-        <Button colorScheme="blue" onClick={handleSubmit} isLoading={loading}>
+        <Button
+          colorScheme="blue"
+          onClick={handleSubmit}
+          isLoading={createLoading}
+        >
           Button
         </Button>
       </Box>

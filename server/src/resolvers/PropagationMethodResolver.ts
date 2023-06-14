@@ -1,11 +1,12 @@
+import { ApolloError } from "apollo-server-errors";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
+
+import datasource from "../db";
 import PropagationMethod, {
   PropagationMethodeInput,
 } from "../entity/PropagationMethod ";
-import datasource from "../db";
-import { ApolloError } from "apollo-server-errors";
-import PropagationSteps from "../entity/PropagationSteps";
 import Specie from "../entity/Specie";
+import PropagationSteps from "../entity/PropagationSteps";
 
 @Resolver(PropagationMethod)
 export class PropagationMethodResolver {
@@ -144,5 +145,38 @@ export class PropagationMethodResolver {
     return await datasource
       .getRepository(PropagationMethod)
       .save({ name, description, steps, species });
+  }
+
+  // Suppression d'un mode de propagation et retourne un boolean (Delete)
+  // @Authorized()
+  @Mutation(() => Boolean)
+  async deletePropagationMethod(@Arg("id") id: number): Promise<boolean> {
+    const propagationExist = await datasource
+      .getRepository(PropagationMethod)
+      .findOne({ where: { id }, relations: { species: true, steps: true } });
+
+    if (propagationExist === null)
+      throw new ApolloError("Propagation method not found", "NOT_FOUND");
+
+    // Suppression des modes de propagation dans les espèces
+    propagationExist.species.map(async (specie) => {
+      specie.propagationMethods = specie.propagationMethods.filter(
+        (propagationMethod) => propagationMethod.id !== id
+      );
+      await datasource.getRepository(Specie).save(specie);
+    });
+
+    // Requête SQL avec un QueryBuilder pour supprimer les modes de propagation dans la table de jointure
+    await datasource
+      .createQueryBuilder()
+      .delete()
+      .from("specie_propagation_method")
+      .where("propagationMethodId = :id", { id })
+      .execute();
+
+    // Suppression du mode de propagation et des étapes de propagation associées grâce au cascade
+    await datasource.getRepository(PropagationMethod).delete(id);
+
+    return true;
   }
 }
