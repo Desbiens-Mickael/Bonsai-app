@@ -9,7 +9,9 @@ import {
   FormLabel,
   Input,
   Box,
+  Select,
 } from "@chakra-ui/react";
+
 import { useEffect, useState } from "react";
 import { useParams, NavLink } from "react-router-dom";
 import Loader from "../components/Loader";
@@ -17,11 +19,15 @@ import Layout from "../containers/Layout";
 import {
   GetBonsaiByIdDocument,
   GetBonsaiByIdQuery,
+  Specie,
   UpdateBonsaiInput,
   useUpdateBonsaiMutation,
+  useGetSpeciesQuery,
 } from "../gql/generated/schema";
 import { RangeDatepicker } from "chakra-dayzed-datepicker";
 import client from "../gql/client";
+import AutocompleteMultiple from "../components/AutocompleteMultiple";
+import { set } from "date-fns";
 const MONTHS = [
   "Janvier",
   "Février",
@@ -52,7 +58,6 @@ export default function EditeBonsai() {
     new Date(),
     new Date(),
   ]);
-  console.log(editeBonsai?.repotting);
 
   useEffect(() => {
     if (id)
@@ -62,8 +67,11 @@ export default function EditeBonsai() {
           variables: { bonsaiId: parseInt(id, 10) },
         })
         .then(({ data }) => {
-          if (data) {
-            setEditeBonsai(data.getBonsaiById);
+          if (data && data.getBonsaiById && data.getBonsaiById.specie) {
+            setEditeBonsai({
+              ...data.getBonsaiById,
+              specieId: data.getBonsaiById.specie.id,
+            });
             setRepottingDate([
               data.getBonsaiById.repotting &&
                 new Date(data.getBonsaiById.repotting),
@@ -79,9 +87,14 @@ export default function EditeBonsai() {
           }
         })
         .catch(() => setErrors(true));
-  }, [id]);
+
+    return () => {
+      setEditeBonsai(undefined);
+    };
+  }, []);
 
   const [updateBonsai, { loading }] = useUpdateBonsaiMutation();
+  const { data: species } = useGetSpeciesQuery();
 
   if (errors) {
     return (
@@ -97,15 +110,15 @@ export default function EditeBonsai() {
       </Layout>
     );
   }
-  if (!editeBonsai || !id) return <Loader />;
+  if (!editeBonsai || !id || !species) return <Loader />;
 
   const save = () => {
-    const newBonsai = updateBonsai({
+    updateBonsai({
       variables: {
-        bonsaiId: parseInt(id, 10),
+        updateBonsaiId: parseInt(id, 10),
         data: {
           name: editeBonsai.name,
-          species: editeBonsai.species,
+          specieId: editeBonsai.specieId,
           age: editeBonsai.age,
           photo: editeBonsai.photo,
           repotting: repottingDate[0],
@@ -121,9 +134,7 @@ export default function EditeBonsai() {
         },
       ],
     });
-    console.log(newBonsai);
   };
-
   return (
     <Layout>
       <Center h="100px">
@@ -177,16 +188,38 @@ export default function EditeBonsai() {
             <FormLabel as="legend" htmlFor={"species"}>
               Espèce du bonsaï
             </FormLabel>
-            <Input
-              type={"text"}
-              name="species"
-              variant="outline"
-              placeholder="Espèce"
-              value={editeBonsai.species}
-              onChange={(e) =>
-                setEditeBonsai({ ...editeBonsai, species: e.target.value })
+            <AutocompleteMultiple
+              // multiple
+              defaultValue={
+                species?.species
+                  .filter((specie) => specie.id === editeBonsai.specieId)
+                  .map((specie) => specie.name)[0]
               }
+              suggestions={species?.species}
+              value={(selectedSpecie) => {
+                if (selectedSpecie) {
+                  setEditeBonsai({
+                    ...editeBonsai,
+                    specieId: selectedSpecie as number,
+                  });
+                }
+              }}
             />
+            {/* <Select
+              defaultValue={editeBonsai.specieId}
+              onChange={(e) =>
+                setEditeBonsai({
+                  ...editeBonsai,
+                  specieId: parseInt(e.target.value, 10),
+                })
+              }
+            >
+              {species?.species.map((specie) => (
+                <option key={specie.id} value={specie.id}>
+                  {specie.name}
+                </option>
+              ))}
+            </Select> */}
             <FormHelperText>Texte d'aide de test</FormHelperText>
           </FormControl>
           <FormControl as="fieldset" mb={6}>

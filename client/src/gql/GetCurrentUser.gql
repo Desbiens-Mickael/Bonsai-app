@@ -10,7 +10,9 @@ query GetCurrentUser {
     bonsais {
       id
       name
-      species
+      specie {
+        name
+      }
       age
       photo
       createdAt
