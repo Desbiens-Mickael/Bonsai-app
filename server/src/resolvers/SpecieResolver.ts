@@ -50,9 +50,6 @@ export class SpecieResolver {
       photo,
     }: SpecieInput
   ): Promise<Specie> {
-    const specieExist = await datasource.getRepository(Specie).findOne({
-      where: { name },
-    });
     let propagationMethod: PropagationMethod[] = [];
     let pruningMethod: PruningMethod[] = [];
 
@@ -92,9 +89,6 @@ export class SpecieResolver {
         )
       ).filter((method): method is PruningMethod => method !== null);
     }
-
-    if (specieExist !== null)
-      throw new ApolloError("Specie already exist", "ALREADY_EXIST");
 
     const specie = await datasource.getRepository(Specie).save({
       name,

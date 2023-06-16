@@ -37,17 +37,6 @@ export class PruningMethodResolver {
   async createPruningMethod(
     @Arg("data") { name, description, speciesIds }: PruningMethodeInput
   ): Promise<PruningMethod> {
-    console.log("createPruningMethod");
-    const pruningExist = await datasource.getRepository(PruningMethod).findOne({
-      where: { name },
-    });
-
-    if (pruningExist !== null)
-      throw new ApolloError(
-        "Cette méthode de taille existe déjà",
-        "ALREADY_EXIST"
-      );
-
     const species = (
       await Promise.all(
         speciesIds.map(
@@ -56,14 +45,12 @@ export class PruningMethodResolver {
         )
       )
     ).filter((specie) => specie !== undefined) as Specie[];
-    console.log(species);
 
-    const pruningMethod = datasource.getRepository(PruningMethod).create({
+    return await datasource.getRepository(PruningMethod).save({
       name,
       description,
       species,
     });
-    return await datasource.getRepository(PruningMethod).save(pruningMethod);
   }
 
   @Mutation(() => PruningMethod)
