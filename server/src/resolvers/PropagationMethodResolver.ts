@@ -20,7 +20,9 @@ export class PropagationMethodResolver {
 
   // Récupère un mode de propagation par son id et retourne une PropagationMethod (Read)
   @Query(() => PropagationMethod)
-  async propagationMethod(@Arg("id") id: number): Promise<PropagationMethod> {
+  async propagationMethodById(
+    @Arg("id") id: number
+  ): Promise<PropagationMethod> {
     const propagationExist = await datasource
       .getRepository(PropagationMethod)
       .findOne({

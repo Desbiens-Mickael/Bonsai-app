@@ -20,15 +20,15 @@ class Bonsai {
     nullable: true,
     onDelete: "SET NULL",
   })
-  specie: Specie | null;
+  specie?: Specie | null;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  age: number;
+  age?: number;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  photo: string;
+  photo?: string;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.bonsais, {
@@ -42,23 +42,23 @@ class Bonsai {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  repotting: Date;
+  repotting?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  nextRepotting: Date;
+  nextRepotting?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  ligaturing: Date;
+  ligaturing?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  deligaturing: Date;
+  deligaturing?: Date;
 }
 
 @InputType()
@@ -71,10 +71,10 @@ export class BonsaiInput {
   specieId: number;
 
   @Field(() => Int, { nullable: true })
-  age: number;
+  age?: number;
 
   @Field({ nullable: true })
-  photo: string;
+  photo?: string;
 }
 
 @InputType()
@@ -87,22 +87,22 @@ export class UpdateBonsaiInput {
   specieId: number;
 
   @Field(() => Int, { nullable: true })
-  age: number;
+  age?: number;
 
   @Field({ nullable: true })
-  photo: string;
+  photo?: string;
 
   @Field({ nullable: true })
-  repotting: Date;
+  repotting?: Date;
 
   @Field({ nullable: true })
-  nextRepotting: Date;
+  nextRepotting?: Date;
 
   @Field({ nullable: true })
-  ligaturing: Date;
+  ligaturing?: Date;
 
   @Field({ nullable: true })
-  deligaturing: Date;
+  deligaturing?: Date;
 }
 
 export default Bonsai;
