@@ -19,12 +19,12 @@ class PropagationSteps {
 
   @Field({ nullable: true })
   @Column("text", { nullable: true })
-  explanation: string;
+  explanation: string | null;
 
   // à modifier quend l'entité Photo sera créée
   @Field({ nullable: true })
   @Column({ nullable: true })
-  photo: string;
+  photo: string | null;
 
   @Field(() => PropagationMethod)
   @ManyToOne(
@@ -43,7 +43,7 @@ export class PropagationStepInput {
   @Field()
   title: string;
 
-  @Field()
+  @Field({ nullable: true })
   explanation: string;
 
   @Field({ nullable: true })
