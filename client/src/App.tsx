@@ -11,6 +11,7 @@ import CreateBonsai from "./pages/CreateBonsai";
 import ShowBonsaisList from "./pages/ShowBonsaisList";
 import EditeBonsai from "./pages/EditeBonsai";
 import { useGetCurrentUserQuery } from "./gql/generated/schema";
+import Loader from "./components/Loader";
 
 function App() {
   const {
@@ -20,6 +21,8 @@ function App() {
   } = useGetCurrentUserQuery({
     errorPolicy: "ignore",
   });
+
+  if (loading) return <Loader />;
 
   return (
     <Routes>
