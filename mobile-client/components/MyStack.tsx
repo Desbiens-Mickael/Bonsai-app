@@ -5,20 +5,19 @@ import ShowBonsai from "../screen/ShowBonsai";
 import Login from "../screen/Login";
 import MyDrawer from "./MyDrawer";
 import { useGetCurrentUserQuery } from "../gql/generated/schema";
-import { View, StyleSheet } from "react-native";
-import Loader from "./Loader";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 
 const Stack = createStackNavigator();
 
 export default function MyStack() {
-  const { data: CurentUser, loading } = useGetCurrentUserQuery({
+  const { data: getCurentUser, loading } = useGetCurrentUserQuery({
     errorPolicy: "ignore",
   });
 
   if (loading)
     return (
       <View style={styles.container}>
-        <Loader />
+        <ActivityIndicator size="large" color="#7100FE" />
       </View>
     );
 
@@ -27,18 +26,18 @@ export default function MyStack() {
       screenOptions={{
         headerTintColor: "#fff",
         headerBackTitle: "Retour",
-        animationTypeForReplace: CurentUser ? "push" : "pop",
+        animationTypeForReplace: getCurentUser ? "push" : "pop",
         headerStyle: {
           backgroundColor: "#7100FE",
         },
       }}
     >
-      {CurentUser ? (
+      {getCurentUser ? (
         <>
           <Stack.Screen
             name="Home_stack"
             component={MyDrawer}
-            options={{ headerShown: false }}
+            options={{ headerShown: false, title: "Accueil2" }}
           />
           <Stack.Screen
             name="ShowBonsai"

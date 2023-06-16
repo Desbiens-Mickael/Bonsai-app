@@ -1,15 +1,12 @@
-mutation UpdateBonsai($data: UpdateBonsaiInput!, $updateBonsaiId: Int!) {
-  updateBonsai(data: $data, id: $updateBonsaiId) {
+mutation UpdateBonsai($data: UpdateBonsaiInput!, $bonsaiId: Int!) {
+  updateBonsai(data: $data, id: $bonsaiId) {
     name
+    species
     age
     photo
     repotting
     nextRepotting
     ligaturing
     deligaturing
-    specie {
-      id
-      name
-    }
   }
 }

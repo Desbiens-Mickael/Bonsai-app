@@ -2,7 +2,6 @@ import { MaxLength } from "class-validator";
 import { Field, InputType, Int, ObjectType } from "type-graphql";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import User from "./User";
-import Specie from "./Specie";
 
 @Entity()
 @ObjectType()
@@ -15,20 +14,17 @@ class Bonsai {
   @Column()
   name: string;
 
-  @Field(() => Specie, { nullable: true })
-  @ManyToOne(() => Specie, (specie) => specie.bonsais, {
-    nullable: true,
-    onDelete: "SET NULL",
-  })
-  specie?: Specie | null;
+  @Field()
+  @Column()
+  species: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  age?: number;
+  age: number;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  photo?: string;
+  photo: string;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.bonsais, {
@@ -42,23 +38,23 @@ class Bonsai {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  updatedAt?: Date;
+  updatedAt: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  repotting?: Date;
+  repotting: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  nextRepotting?: Date;
+  nextRepotting: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  ligaturing?: Date;
+  ligaturing: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  deligaturing?: Date;
+  deligaturing: Date;
 }
 
 @InputType()
@@ -67,14 +63,15 @@ export class BonsaiInput {
   @MaxLength(150)
   name: string;
 
-  @Field(() => Int)
-  specieId: number;
+  @Field()
+  @MaxLength(150)
+  species: string;
 
   @Field(() => Int, { nullable: true })
-  age?: number;
+  age: number;
 
   @Field({ nullable: true })
-  photo?: string;
+  photo: string;
 }
 
 @InputType()
@@ -83,26 +80,27 @@ export class UpdateBonsaiInput {
   @MaxLength(150)
   name: string;
 
-  @Field(() => Int)
-  specieId: number;
+  @Field()
+  @MaxLength(150)
+  species: string;
 
   @Field(() => Int, { nullable: true })
-  age?: number;
+  age: number;
 
   @Field({ nullable: true })
-  photo?: string;
+  photo: string;
 
   @Field({ nullable: true })
-  repotting?: Date;
+  repotting: Date;
 
   @Field({ nullable: true })
-  nextRepotting?: Date;
+  nextRepotting: Date;
 
   @Field({ nullable: true })
-  ligaturing?: Date;
+  ligaturing: Date;
 
   @Field({ nullable: true })
-  deligaturing?: Date;
+  deligaturing: Date;
 }
 
 export default Bonsai;

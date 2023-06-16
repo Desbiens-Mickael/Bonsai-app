@@ -1,11 +1,8 @@
-query GetBonsaisByUser {
-  getBonsaisByUser {
+query GetBonsaisByUser($userId: Int!) {
+  getBonsaisByUser(userId: $userId) {
     id
     name
-    specie {
-      id
-      name
-    }
+    species
     age
     photo
     createdAt

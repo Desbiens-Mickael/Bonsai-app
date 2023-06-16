@@ -2,10 +2,7 @@ mutation CreateBonsai($data: BonsaiInput!) {
   createBonsai(data: $data) {
     id
     name
-    specie {
-      id
-      name
-    }
+    species
     age
     photo
     createdAt

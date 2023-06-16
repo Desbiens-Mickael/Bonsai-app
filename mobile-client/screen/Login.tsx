@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
+  Button,
   Text,
   StyleSheet,
   TextInput,
@@ -79,20 +80,16 @@ export default function Login() {
       </View>
       <Text style={styles.textError}>{error}</Text>
       <View style={styles.boxButton}>
-        <TouchableOpacity
-          onPress={() => handleLogin()}
-          activeOpacity={0.5}
+        <LinearGradient
+          colors={["#B57CFC", "#7100FE"]}
+          start={{ y: 1.5, x: 0.0 }}
+          end={{ y: 0.0, x: 0.0 }}
           style={styles.loginBtn}
         >
-          <LinearGradient
-            colors={["#B57CFC", "#7100FE"]}
-            start={{ y: 1.5, x: 0.0 }}
-            end={{ y: 0.0, x: 0.0 }}
-            style={styles.loginBtn}
-          >
+          <TouchableOpacity onPress={() => handleLogin()} activeOpacity={0.5}>
             <Text style={styles.buttonSubmit}>Connexion</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </LinearGradient>
       </View>
     </SafeAreaView>
   );
@@ -127,7 +124,7 @@ const styles = StyleSheet.create({
   },
   hideIcon: {
     marginRight: 10,
-    color: "#7100FE",
+    color: "#2196F3",
   },
   textError: {
     color: "red",
@@ -146,7 +143,5 @@ const styles = StyleSheet.create({
   },
   buttonSubmit: {
     color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
   },
 });

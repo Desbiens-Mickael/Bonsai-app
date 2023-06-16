@@ -3,7 +3,11 @@ import { View, Button, Text, StyleSheet } from "react-native";
 export default function HomeScreen({ navigation }: any) {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Home Screen</Text>
+      <Text style={styles.text}>Hello World!</Text>
+      <Button
+        title="Mes Bonsais"
+        onPress={() => navigation.navigate("Mes bonsais")}
+      />
     </View>
   );
 }

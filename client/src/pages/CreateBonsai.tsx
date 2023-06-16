@@ -5,26 +5,18 @@ import {
   FormHelperText,
   FormLabel,
   Input,
-  Select,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
 import Layout from "../containers/Layout";
-import {
-  useCreateBonsaiMutation,
-  useGetSpeciesQuery,
-} from "../gql/generated/schema";
-import AutocompleteMultiple from "../components/AutocompleteMultiple";
-import Loader from "../components/Loader";
+import { useCreateBonsaiMutation } from "../gql/generated/schema";
 
 const CreateBonsai = () => {
   const [name, setName] = useState<string>("");
-  const [specie, setSpecie] = useState<number>(0);
+  const [species, setSpecies] = useState<string>("");
   const [age, setAge] = useState<number>(0);
   const [photo, setPhoto] = useState<string>("");
-  const [CreateBonsai, { loading: createLoading, error, client }] =
-    useCreateBonsaiMutation();
+  const [CreateBonsai, { loading, error, client }] = useCreateBonsaiMutation();
 
-  const { data: dataSpecies, loading: speciesLoading } = useGetSpeciesQuery();
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -32,7 +24,7 @@ const CreateBonsai = () => {
         variables: {
           data: {
             name,
-            specieId: specie,
+            species,
             age,
             photo,
           },
@@ -43,13 +35,11 @@ const CreateBonsai = () => {
       console.error(error);
     } finally {
       setName("");
-      setSpecie(0);
+      setSpecies("");
       setAge(0);
       setPhoto("");
     }
   };
-
-  if (speciesLoading || !dataSpecies) return <Loader />;
 
   return (
     <Layout>
@@ -77,17 +67,17 @@ const CreateBonsai = () => {
           />
           <FormHelperText>Texte d'aide de test</FormHelperText>
         </FormControl>
-        <FormControl as="fieldset" mb={6}>
+        <FormControl as="fieldset">
           <FormLabel as="legend" htmlFor={"species"}>
             Espèce du bonsaï
           </FormLabel>
-          <AutocompleteMultiple
-            suggestions={dataSpecies?.species}
-            value={(selectedSpecie) => {
-              if (selectedSpecie) {
-                setSpecie(selectedSpecie as number);
-              }
-            }}
+          <Input
+            type={"text"}
+            name="species"
+            variant="outline"
+            placeholder="Espèce"
+            value={species}
+            onChange={(e) => setSpecies(e.target.value)}
           />
           <FormHelperText>Texte d'aide de test</FormHelperText>
         </FormControl>
@@ -116,11 +106,7 @@ const CreateBonsai = () => {
           />
           <FormHelperText>Texte d'aide de test</FormHelperText>
         </FormControl>
-        <Button
-          colorScheme="blue"
-          onClick={handleSubmit}
-          isLoading={createLoading}
-        >
+        <Button colorScheme="blue" onClick={handleSubmit} isLoading={loading}>
           Button
         </Button>
       </Box>
