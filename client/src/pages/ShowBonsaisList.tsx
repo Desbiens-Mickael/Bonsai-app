@@ -8,14 +8,14 @@ import { useGetBonsaisByUserQuery } from "../gql/generated/schema";
 
 export default function ShowBonsaisList() {
   const { id } = useParams() || 0;
-  const test = id ?? "0";
+  // const test = id ?? "0";
   const {
     data,
     loading,
     error,
     refetch: refetchBonsai,
   } = useGetBonsaisByUserQuery({
-    variables: { userId: parseInt(test) },
+    // variables: { userId: parseInt(test) },
   });
   const bonsais = data?.getBonsaisByUser || [];
 

@@ -94,7 +94,7 @@ export default function NavBar() {
                 {data && (
                   <>
                     <MenuItem>
-                      <Link to={`/show-bonsais-list/${id}`}>Mes bonsais</Link>
+                      <Link to={"/show-bonsais-list"}>Mes bonsais</Link>
                     </MenuItem>
 
                     <MenuItem>
