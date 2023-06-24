@@ -10,6 +10,8 @@ import {
   Input,
   Box,
   Select,
+  Collapse,
+  ScaleFade,
 } from "@chakra-ui/react";
 
 import { useEffect, useState } from "react";
@@ -28,6 +30,7 @@ import { RangeDatepicker } from "chakra-dayzed-datepicker";
 import client from "../gql/client";
 import AutocompleteMultiple from "../components/AutocompleteMultiple";
 import { set } from "date-fns";
+import { EditIcon } from "@chakra-ui/icons";
 const MONTHS = [
   "Janvier",
   "Février",
@@ -45,7 +48,28 @@ const MONTHS = [
 
 const DAYS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
+type activateType = {
+  photo: boolean;
+  name: boolean;
+  specie: boolean;
+  age: boolean;
+  repotting: boolean;
+  nextRepotting: boolean;
+  ligaturing: boolean;
+  deligaturing: boolean;
+};
+
 export default function EditeBonsai() {
+  const [activate, setActivate] = useState<activateType>({
+    photo: false,
+    name: false,
+    specie: false,
+    age: false,
+    repotting: false,
+    nextRepotting: false,
+    ligaturing: false,
+    deligaturing: false,
+  });
   const { id } = useParams() as { id: string };
   const [editeBonsai, setEditeBonsai] = useState<UpdateBonsaiInput>();
   const [errors, setErrors] = useState<boolean>(false);
@@ -148,16 +172,42 @@ export default function EditeBonsai() {
         gap={4}
         mb={4}
       >
-        <Image
-          borderRadius="full"
-          boxSize="200px"
-          src={
-            editeBonsai.photo
-              ? editeBonsai.photo
-              : "/src/assets/images/bonsai-default.jpg"
-          }
-          alt={editeBonsai.name}
-        />
+        <Flex flexDir={"column"} justifyContent={"center"}>
+          <Box>
+            <Image
+              borderRadius="full"
+              boxSize="200px"
+              src={
+                editeBonsai.photo
+                  ? editeBonsai.photo
+                  : "/src/assets/images/bonsai-default.jpg"
+              }
+              alt={editeBonsai.name}
+            />
+            <EditIcon
+              onClick={() =>
+                setActivate({ ...activate, photo: !activate.photo })
+              }
+            />
+          </Box>
+
+          <Collapse in={activate.photo} animate>
+            <FormControl as="fieldset" mb={6}>
+              <FormLabel as="legend" htmlFor={"species"}>
+                Photo du bonsaï
+              </FormLabel>
+              <Input
+                name="photo"
+                variant="outline"
+                value={editeBonsai.photo?.toString()}
+                onChange={(e) =>
+                  setEditeBonsai({ ...editeBonsai, photo: e.target.value })
+                }
+              />
+              <FormHelperText>Texte d'aide de test</FormHelperText>
+            </FormControl>
+          </Collapse>
+        </Flex>
 
         <Box
           display="flex"
@@ -168,131 +218,193 @@ export default function EditeBonsai() {
           mx={"auto"}
           p={4}
         >
-          <FormControl as="fieldset" mb={6}>
-            <FormLabel as="legend" htmlFor={"name"}>
-              Nom du bonsaï
-            </FormLabel>
-            <Input
-              type={"text"}
-              name="name"
-              variant="outline"
-              placeholder="Nom"
-              value={editeBonsai.name}
-              onChange={(e) =>
-                setEditeBonsai({ ...editeBonsai, name: e.target.value })
-              }
-            />
-            <FormHelperText>Texte d'aide de test</FormHelperText>
-          </FormControl>
-          <FormControl as="fieldset" mb={6}>
-            <FormLabel as="legend" htmlFor={"species"}>
-              Espèce du bonsaï
-            </FormLabel>
-            <AutocompleteMultiple
-              // multiple
-              defaultValue={
-                species?.species
-                  .filter((specie) => specie.id === editeBonsai.specieId)
-                  .map((specie) => specie.name)[0]
-              }
-              suggestions={species?.species}
-              value={(selectedSpecie) => {
-                if (selectedSpecie) {
-                  setEditeBonsai({
-                    ...editeBonsai,
-                    specieId: selectedSpecie as number,
-                  });
+          <Flex flexDir={"column"}>
+            <Flex alignItems={"center"}>
+              {editeBonsai.name ?? "Pas de nom renseigné"}
+              <EditIcon
+                ms={2}
+                onClick={() =>
+                  setActivate({ ...activate, name: !activate.name })
                 }
-              }}
-            />
-            {/* <Select
-              defaultValue={editeBonsai.specieId}
-              onChange={(e) =>
-                setEditeBonsai({
-                  ...editeBonsai,
-                  specieId: parseInt(e.target.value, 10),
-                })
-              }
+              />
+            </Flex>
+            <Collapse in={activate.name} animate>
+              <FormControl as="fieldset" mb={6}>
+                <FormLabel as="legend" htmlFor={"name"}>
+                  Nom du bonsaï
+                </FormLabel>
+                <Input
+                  type={"text"}
+                  name="name"
+                  variant="outline"
+                  placeholder="Nom"
+                  value={editeBonsai.name}
+                  onChange={(e) =>
+                    setEditeBonsai({ ...editeBonsai, name: e.target.value })
+                  }
+                />
+                <FormHelperText>Texte d'aide de test</FormHelperText>
+              </FormControl>
+            </Collapse>
+          </Flex>
+
+          <Flex flexDir={"column"} mt={3}>
+            <Flex alignItems={"center"}>
+              {editeBonsai.age !== 0 &&
+              !Number.isNaN(editeBonsai.age) &&
+              editeBonsai.age !== null
+                ? editeBonsai.age
+                : "Pas d'âge renseigné"}
+              <EditIcon
+                ms={2}
+                onClick={() => setActivate({ ...activate, age: !activate.age })}
+              />
+            </Flex>
+            <Collapse in={activate.age} animate>
+              <FormControl as="fieldset" mb={6}>
+                <FormLabel as="legend" htmlFor={"age"}>
+                  Age du bonsaï
+                </FormLabel>
+                <Input
+                  type={"number"}
+                  name="age"
+                  variant="outline"
+                  value={editeBonsai.age ?? 0}
+                  onChange={(e) =>
+                    setEditeBonsai({
+                      ...editeBonsai,
+                      age: parseInt(e.target.value, 10),
+                    })
+                  }
+                />
+                <FormHelperText>Texte d'aide de test</FormHelperText>
+              </FormControl>
+            </Collapse>
+          </Flex>
+
+          <Flex flexDir={"column"} mt={3}>
+            <Flex alignItems={"center"}>
+              {editeBonsai.specieId
+                ? species.species.filter(
+                    (specie) => specie.id === editeBonsai.specieId
+                  )[0].name
+                : "Pas d'espèce renseigné"}
+              <EditIcon
+                ms={2}
+                onClick={() =>
+                  setActivate({ ...activate, specie: !activate.specie })
+                }
+              />
+            </Flex>
+            <Collapse in={activate.specie} animate>
+              <FormControl as="fieldset" mb={6}>
+                <FormLabel as="legend" htmlFor={"species"}>
+                  Espèce du bonsaï
+                </FormLabel>
+                <AutocompleteMultiple
+                  // multiple
+                  defaultValue={
+                    species?.species
+                      .filter((specie) => specie.id === editeBonsai.specieId)
+                      .map((specie) => specie.name)[0]
+                  }
+                  suggestions={species?.species}
+                  value={(selectedSpecie) => {
+                    if (selectedSpecie) {
+                      setEditeBonsai({
+                        ...editeBonsai,
+                        specieId: selectedSpecie as number,
+                      });
+                    }
+                  }}
+                />
+                <FormHelperText>Texte d'aide de test</FormHelperText>
+              </FormControl>
+            </Collapse>
+          </Flex>
+
+          <Flex flexDir={"column"} mt={3}>
+            <Flex alignItems={"center"}>
+              {editeBonsai.repotting ?? "Pas de date renseigné"}
+              <EditIcon
+                ms={2}
+                onClick={() =>
+                  setActivate({ ...activate, repotting: !activate.repotting })
+                }
+              />
+            </Flex>
+            <Collapse
+              in={activate.repotting}
+              animate
+              style={{ overflow: "unset" }}
             >
-              {species?.species.map((specie) => (
-                <option key={specie.id} value={specie.id}>
-                  {specie.name}
-                </option>
-              ))}
-            </Select> */}
-            <FormHelperText>Texte d'aide de test</FormHelperText>
-          </FormControl>
-          <FormControl as="fieldset" mb={6}>
-            <FormLabel as="legend" htmlFor={"age"}>
-              Age du bonsaï
-            </FormLabel>
-            <Input
-              type={"number"}
-              name="age"
-              variant="outline"
-              value={editeBonsai.age ? editeBonsai.age?.toString() : 0}
-              onChange={(e) =>
-                setEditeBonsai({
-                  ...editeBonsai,
-                  age: parseInt(e.target.value, 10),
-                })
-              }
-            />
-            <FormHelperText>Texte d'aide de test</FormHelperText>
-          </FormControl>
-          <FormControl as="fieldset" mb={6}>
-            <FormLabel as="legend" htmlFor={"species"}>
-              Photo du bonsaï
-            </FormLabel>
-            <Input
-              name="photo"
-              variant="outline"
-              value={editeBonsai.photo?.toString()}
-              onChange={(e) =>
-                setEditeBonsai({ ...editeBonsai, photo: e.target.value })
-              }
-            />
-            <FormHelperText>Texte d'aide de test</FormHelperText>
-          </FormControl>
-          <FormControl as="fieldset" mb={6}>
-            <FormLabel as="legend" htmlFor={"species"}>
-              Date du rempotage
-            </FormLabel>
-            <RangeDatepicker
-              selectedDates={repottingDate}
-              onDateChange={setRepottingDate}
-              configs={{
-                dateFormat: "dd-MM-yyyy",
-                monthNames: MONTHS,
-                dayNames: DAYS,
-              }}
-            />
-            <FormHelperText>
-              Date du rempotage et date du prochain rempotage
-            </FormHelperText>
-          </FormControl>
-          <FormControl as="fieldset" mb={6}>
-            <FormLabel as="legend" htmlFor={"species"}>
-              Date de ligaturage
-            </FormLabel>
-            <RangeDatepicker
-              selectedDates={ligaturingDate}
-              onDateChange={setLigaturingDate}
-              configs={{
-                dateFormat: "dd-MM-yyyy",
-                monthNames: MONTHS,
-                dayNames: DAYS,
-              }}
-            />
-            <FormHelperText>
-              Date du ligaturage et date du prochain ligaturage
-            </FormHelperText>
-          </FormControl>
+              <FormControl as="fieldset" mb={6}>
+                <FormLabel as="legend" htmlFor={"species"}>
+                  Date du rempotage
+                </FormLabel>
+                <RangeDatepicker
+                  selectedDates={repottingDate}
+                  onDateChange={setRepottingDate}
+                  configs={{
+                    dateFormat: "dd-MM-yyyy",
+                    monthNames: MONTHS,
+                    dayNames: DAYS,
+                  }}
+                />
+                <FormHelperText>
+                  Date du rempotage et date du prochain rempotage
+                </FormHelperText>
+              </FormControl>
+            </Collapse>
+          </Flex>
+
+          <Flex flexDir={"column"} mt={3}>
+            <Flex alignItems={"center"}>
+              <Image
+                src="/src/assets/images/ligaturing.png"
+                alt="Ligaturnig"
+                w={"60px"}
+                me={2}
+              />
+              {editeBonsai.ligaturing ?? "Pas de date renseigné"}
+              <EditIcon
+                ms={2}
+                onClick={() =>
+                  setActivate({ ...activate, ligaturing: !activate.ligaturing })
+                }
+              />
+            </Flex>
+            <Collapse
+              in={activate.ligaturing}
+              animate
+              style={{ overflow: "unset" }}
+            >
+              <FormControl as="fieldset" mb={6}>
+                <FormLabel as="legend" htmlFor={"species"}>
+                  Date de ligaturage
+                </FormLabel>
+                <RangeDatepicker
+                  selectedDates={ligaturingDate}
+                  onDateChange={setLigaturingDate}
+                  configs={{
+                    dateFormat: "dd-MM-yyyy",
+                    monthNames: MONTHS,
+                    dayNames: DAYS,
+                  }}
+                />
+                <FormHelperText>
+                  Date du ligaturage et date du prochain ligaturage
+                </FormHelperText>
+              </FormControl>
+            </Collapse>
+          </Flex>
+
           <Button
             colorScheme="blue"
             onClick={save}
             isLoading={loading}
             width={{ base: "100%", md: "100px" }}
+            mt={4}
             mx={"auto"}
             p={4}
           >

@@ -32,7 +32,7 @@ export default function ShowBonsaisList() {
         <Center h="600px">
           <Heading fontSize={{ base: "4xl", md: "xxx-large" }}>
             Tu n'as pas encore de bonsai, tu peux en créer un
-            <Text as={NavLink} to="/create-bonsai" color="#008dff">
+            <Text as={NavLink} to="/create-bonsai" color="#008dff" ms={"1rem"}>
               ici
             </Text>
           </Heading>
@@ -62,7 +62,9 @@ export default function ShowBonsaisList() {
               name={bonsai.name}
               photo={bonsai.photo ? bonsai.photo : ""}
               updatedAt={bonsai.updatedAt}
+              repotting={bonsai.repotting}
               nextRepotting={bonsai.nextRepotting}
+              ligaturing={bonsai.ligaturing}
               deligaturing={bonsai.deligaturing}
             />
           ))}
