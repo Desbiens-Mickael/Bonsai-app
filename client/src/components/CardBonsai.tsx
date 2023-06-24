@@ -9,14 +9,18 @@ import {
   Image,
   Text,
   VStack,
+  Flex,
 } from "@chakra-ui/react";
+import DisplayPourcentTime from "./DisplayPourcentTime";
 
 interface CardBonsaiProps {
   id: number;
   name: string;
   photo?: string;
   updatedAt: Date;
+  repotting: Date;
   nextRepotting: Date;
+  ligaturing: Date;
   deligaturing: Date;
 }
 export default function CardBonsai({
@@ -24,15 +28,17 @@ export default function CardBonsai({
   name,
   photo,
   updatedAt,
+  repotting,
   nextRepotting,
+  ligaturing,
   deligaturing,
 }: CardBonsaiProps) {
   return (
     <Card
       maxW={{ base: "100%", sm: "100%", md: "sm" }}
       width={{ base: "100%", sm: "100%", md: "sm" }}
-      minH={{ base: "100%", sm: "100%", md: "lg" }}
-      height={{ base: "100%", sm: "100%", md: "lg" }}
+      minH={{ base: "100%", sm: "100%", md: "xl" }}
+      height={{ base: "100%", sm: "100%", md: "100%" }}
       direction={{ base: "row", sm: "row", md: "column" }}
       overflow="hidden"
       variant="outline"
@@ -54,20 +60,45 @@ export default function CardBonsai({
       <Stack flex={2}>
         <CardBody>
           {updatedAt && (
-            <Text>{`Dérnier entretien: ${new Date(updatedAt).toLocaleDateString(
-              "fr-fr"
-            )}`}</Text>
+            <Text>
+              {`Dérnier entretien: ${new Date(updatedAt).toLocaleDateString(
+                "fr-fr"
+              )}`}
+            </Text>
           )}
-          {nextRepotting && (
-            <Text>{`Prochain rempotage: ${new Date(
-              nextRepotting
-            ).toLocaleDateString("fr-fr")}`}</Text>
-          )}
-          {deligaturing && (
-            <Text>{`Pense à enlever la ligature le: ${new Date(
-              deligaturing
-            ).toLocaleDateString("fr-fr")} 😉`}</Text>
-          )}
+          <Flex
+            flexDir={{ base: "row", md: "column" }}
+            justifyContent={"space-evenly"}
+          >
+            {nextRepotting && (
+              <Flex justifyContent={"space-around"} alignItems={"center"}>
+                <DisplayPourcentTime
+                  image="/src/assets/images/repotting.png"
+                  startDate={repotting}
+                  endDate={nextRepotting}
+                  title="Rempotage"
+                />
+
+                <Text display={{ base: "none", md: "block" }}>
+                  {new Date(nextRepotting).toLocaleDateString("fr-fr")}
+                </Text>
+              </Flex>
+            )}
+            {deligaturing && (
+              <Flex justifyContent={"space-around"} alignItems={"center"}>
+                <DisplayPourcentTime
+                  image="/src/assets/images/ligaturing.png"
+                  startDate={ligaturing}
+                  endDate={deligaturing}
+                  title="Déligaturage"
+                />
+
+                <Text display={{ base: "none", md: "block" }}>
+                  {new Date(deligaturing).toLocaleDateString("fr-fr")}
+                </Text>
+              </Flex>
+            )}
+          </Flex>
         </CardBody>
 
         <CardFooter
