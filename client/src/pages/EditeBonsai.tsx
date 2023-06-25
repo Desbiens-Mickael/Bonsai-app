@@ -12,6 +12,7 @@ import {
   Select,
   Collapse,
   ScaleFade,
+  Text,
 } from "@chakra-ui/react";
 
 import { useEffect, useState } from "react";
@@ -161,9 +162,37 @@ export default function EditeBonsai() {
   };
   return (
     <Layout>
-      <Center h="100px">
-        <Heading fontSize={"xxx-large"}>{editeBonsai.name}</Heading>
-      </Center>
+      <Flex flexDir={"column"} alignItems={"center"}>
+        <Flex justifyContent={"center"} alignItems={"center"} my={5}>
+          {editeBonsai.name ? (
+            <Heading fontSize={"xxx-large"}>{editeBonsai.name}</Heading>
+          ) : (
+            "Pas de nom renseigné"
+          )}
+          <EditIcon
+            ms={2}
+            onClick={() => setActivate({ ...activate, name: !activate.name })}
+          />
+        </Flex>
+        <Collapse in={activate.name} animate>
+          <FormControl as="fieldset" mb={6}>
+            <FormLabel as="legend" htmlFor={"name"}>
+              Nom du bonsaï
+            </FormLabel>
+            <Input
+              type={"text"}
+              name="name"
+              variant="outline"
+              placeholder="Nom"
+              value={editeBonsai.name}
+              onChange={(e) =>
+                setEditeBonsai({ ...editeBonsai, name: e.target.value })
+              }
+            />
+            <FormHelperText>Texte d'aide de test</FormHelperText>
+          </FormControl>
+        </Collapse>
+      </Flex>
       <Flex
         flexDir={"column"}
         flexWrap={"wrap"}
@@ -218,42 +247,12 @@ export default function EditeBonsai() {
           mx={"auto"}
           p={4}
         >
-          <Flex flexDir={"column"}>
-            <Flex alignItems={"center"}>
-              {editeBonsai.name ?? "Pas de nom renseigné"}
-              <EditIcon
-                ms={2}
-                onClick={() =>
-                  setActivate({ ...activate, name: !activate.name })
-                }
-              />
-            </Flex>
-            <Collapse in={activate.name} animate>
-              <FormControl as="fieldset" mb={6}>
-                <FormLabel as="legend" htmlFor={"name"}>
-                  Nom du bonsaï
-                </FormLabel>
-                <Input
-                  type={"text"}
-                  name="name"
-                  variant="outline"
-                  placeholder="Nom"
-                  value={editeBonsai.name}
-                  onChange={(e) =>
-                    setEditeBonsai({ ...editeBonsai, name: e.target.value })
-                  }
-                />
-                <FormHelperText>Texte d'aide de test</FormHelperText>
-              </FormControl>
-            </Collapse>
-          </Flex>
-
           <Flex flexDir={"column"} mt={3}>
             <Flex alignItems={"center"}>
               {editeBonsai.age !== 0 &&
               !Number.isNaN(editeBonsai.age) &&
               editeBonsai.age !== null
-                ? editeBonsai.age
+                ? `Age: ${editeBonsai.age} ans`
                 : "Pas d'âge renseigné"}
               <EditIcon
                 ms={2}
@@ -323,9 +322,25 @@ export default function EditeBonsai() {
             </Collapse>
           </Flex>
 
-          <Flex flexDir={"column"} mt={3}>
+          <Flex flexDir={"column"} mt={3} alignItems={"center"}>
             <Flex alignItems={"center"}>
-              {editeBonsai.repotting ?? "Pas de date renseigné"}
+              <Image
+                src="/src/assets/images/repotting.png"
+                alt="Ligaturnig"
+                w={"60px"}
+                me={2}
+              />
+              {editeBonsai.repotting ? (
+                <Text>
+                  {`${new Date(editeBonsai?.nextRepotting).toLocaleDateString(
+                    "fr-fr"
+                  )} - ${new Date(editeBonsai?.repotting).toLocaleDateString(
+                    "fr-fr"
+                  )}`}
+                </Text>
+              ) : (
+                "Pas de date renseigné"
+              )}
               <EditIcon
                 ms={2}
                 onClick={() =>
@@ -366,7 +381,17 @@ export default function EditeBonsai() {
                 w={"60px"}
                 me={2}
               />
-              {editeBonsai.ligaturing ?? "Pas de date renseigné"}
+              {editeBonsai.ligaturing ? (
+                <Text>
+                  {`${new Date(editeBonsai?.deligaturing).toLocaleDateString(
+                    "fr-fr"
+                  )} - ${new Date(editeBonsai?.ligaturing).toLocaleDateString(
+                    "fr-fr"
+                  )}`}
+                </Text>
+              ) : (
+                "Pas de date renseigné"
+              )}
               <EditIcon
                 ms={2}
                 onClick={() =>
