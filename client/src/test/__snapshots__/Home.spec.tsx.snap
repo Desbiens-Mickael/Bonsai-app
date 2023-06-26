@@ -10,7 +10,7 @@ exports[`Home displays the heading 1`] = `
         class="css-1mr4ysp"
       >
         <div
-          class="css-19pkskf"
+          class="css-au04bb"
         >
           <button
             aria-label="Open Menu"
@@ -38,15 +38,15 @@ exports[`Home displays the heading 1`] = `
               <a
                 href="/"
               >
-                Logo
+                <img
+                  class="chakra-image css-1m2z7wn"
+                  src="/src/assets/images/logo.png"
+                />
               </a>
             </div>
             <nav
               class="chakra-stack css-1y6oau7"
             />
-          </div>
-          <div>
-            Loading
           </div>
           <div
             class="css-70qvj9"
