@@ -10,10 +10,11 @@ COPY .npmrc .npmrc
 RUN npm i
 RUN npm i -g serve
 
-COPY postcss.config.js postcss.config.js 
 COPY tsconfig.json tsconfig.json
-COPY tailwind.config.js tailwind.config.js
+COPY tsconfig.node.json tsconfig.node.json
+COPY vite.config.ts vite.config.ts
 COPY public public
+COPY index.html index.html
 COPY codegen.yml codegen.yml
 COPY src src
 
