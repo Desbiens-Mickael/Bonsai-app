@@ -15,8 +15,10 @@ import {
 } from "../gql/generated/schema";
 import AutocompleteMultiple from "../components/AutocompleteMultiple";
 import Loader from "../components/Loader";
+import { useNavigate } from "react-router-dom";
 
 const CreateBonsai = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [specie, setSpecie] = useState<number>(0);
   const [age, setAge] = useState<number>(0);
@@ -25,10 +27,10 @@ const CreateBonsai = () => {
     useCreateBonsaiMutation();
 
   const { data: dataSpecies, loading: speciesLoading } = useGetSpeciesQuery();
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const bonsai = CreateBonsai({
+      const bonsai = await CreateBonsai({
         variables: {
           data: {
             name,
@@ -38,7 +40,7 @@ const CreateBonsai = () => {
           },
         },
       });
-      console.log(bonsai);
+      navigate(`/edit-bonsai/${bonsai.data?.createBonsai.id}`);
     } catch (error) {
       console.error(error);
     } finally {
@@ -121,7 +123,7 @@ const CreateBonsai = () => {
           onClick={handleSubmit}
           isLoading={createLoading}
         >
-          Button
+          Créer
         </Button>
       </Box>
     </Layout>

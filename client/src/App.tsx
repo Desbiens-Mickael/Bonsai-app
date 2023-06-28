@@ -12,6 +12,7 @@ import ShowBonsaisList from "./pages/ShowBonsaisList";
 import EditeBonsai from "./pages/EditeBonsai";
 import { useGetCurrentUserQuery } from "./gql/generated/schema";
 import Loader from "./components/Loader";
+import ShowSpecies from "./pages/ShowSpecies";
 
 function App() {
   const {
@@ -47,13 +48,14 @@ function App() {
           element={<Profile />}
           errorElement={<ErrorPage />}
         />
+        <Route index path="/" element={<Home />} />
         <Route path="/create-bonsai" element={<CreateBonsai />} />
-        <Route path="/show-bonsais-list/:id" element={<ShowBonsaisList />} />
+        <Route path="/show-bonsais-list" element={<ShowBonsaisList />} />
         <Route path="/edit-bonsai/:id" element={<EditeBonsai />} />
+        <Route path="/specie/:id" element={<ShowSpecies />} />
       </Route>
-      <Route index path="/" element={<Home />} />
       <Route path="/notFound" element={<NotFound />} />
-      {/* <Route path="*" element={<Navigate to={"/notFound"} />} /> */}
+      <Route path="*" element={<Navigate to={"/notFound"} />} />
     </Routes>
   );
 }
