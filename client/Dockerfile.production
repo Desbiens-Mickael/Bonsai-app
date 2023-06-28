@@ -24,4 +24,4 @@ ENV REACT_APP_GRAPHQL_API_URL ${REACT_APP_GRAPHQL_API_URL}
 
 RUN npm run build
 
-CMD serve -s build
+CMD serve -s dist
