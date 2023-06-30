@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/playwright:v1.16.2-focal
+# Étape 1 : Installer pnpm et les dépendances avec une version récente de Node.js
+FROM node:16.19 as builder
 
-RUN mkdir /server
 WORKDIR /server
 
 COPY ./server/package.json ./package.json
@@ -9,6 +9,12 @@ COPY ./server/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN npm i -g pnpm
 RUN pnpm i
 
+# Étape 2 : Copier les dépendances installées dans l'image de Playwright
+FROM mcr.microsoft.com/playwright:v1.16.2-focal
+
+WORKDIR /server
+
+COPY --from=builder /server/node_modules ./node_modules
 COPY ./server/src ./
 COPY ./server/.env ./
 COPY ./server/.eslintrc.js ./
