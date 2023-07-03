@@ -76,7 +76,7 @@ async function resetDB(): Promise<void> {
     .save({
       stepNumber: 1,
       title: "Préparation du substrat",
-      description: "Préparer un substrat composé de terreau et de sable.",
+      explanation: "Préparer un substrat composé de terreau et de sable.",
     });
 
   const pruningStep = await datasource.getRepository("PruningStep").save({
@@ -128,7 +128,7 @@ async function resetDB(): Promise<void> {
     },
   ]);
 
-  const test = await datasource.getRepository("Specie").find({
+  await datasource.getRepository("Specie").find({
     where: { name: "Erable du Japon" },
     relations: {
       pruningMethods: true,
@@ -136,8 +136,6 @@ async function resetDB(): Promise<void> {
       bonsais: true,
     },
   });
-
-  console.log(test);
 
   await datasource.destroy();
   console.log("Database reset 👍");

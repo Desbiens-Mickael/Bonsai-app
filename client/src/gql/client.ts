@@ -12,7 +12,7 @@ const client = new ApolloClient({
   },
   link: createHttpLink({
     // instance de createHttpLink (lien) qui permet de faire des requêtes HTTP
-    uri: "http://localhost:4000", // url du serveur GraphQL
+    uri: import.meta.env.REACT_APP_GRAPHQL_API_URL || "http://localhost:4000", // url du serveur GraphQL
     credentials: "include", // inclure les cookies dans les requêtes
   }),
 });

@@ -14,6 +14,7 @@ import {
   Box,
   Heading,
 } from "@chakra-ui/react";
+import Loader from "../components/Loader";
 
 const Login = () => {
   const [password, setPassword] = useState("test1234");
@@ -41,6 +42,8 @@ const Login = () => {
       client.resetStore();
     }
   };
+
+  if (loading) return <Loader />;
 
   return (
     <Layout>
@@ -95,6 +98,19 @@ const Login = () => {
           <FormErrorMessage>Ce champ est obligatoire</FormErrorMessage>
         </FormControl>
         <Button type="submit">Valider</Button>
+
+        {error && (
+          <Heading
+            as={"p"}
+            fontSize={".8rem"}
+            fontWeight={"normal"}
+            color={"red"}
+            textAlign={"center"}
+          >
+            Identifiants incorrects
+          </Heading>
+        )}
+
         <Heading as={"p"} fontSize={".8rem"} fontWeight={"normal"}>
           Pas encore de compte?{" "}
           <Link to={"/register"} color={"blue"}>
