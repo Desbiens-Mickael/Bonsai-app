@@ -22,7 +22,7 @@ test("can log in with valid credentials", async ({ page }) => {
   await page.fill("#email", email);
   await page.fill("#password", password);
 
-  await page.getByText("Valider").click();
+  await page.getByRole("button", { name: "Valider" }).click();
 
   await page.waitForURL("/");
   await expect(
