@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import Home from "../pages/Home";
 import { MockedProvider } from "@apollo/client/testing";
 import { BrowserRouter } from "react-router-dom";
@@ -55,4 +55,6 @@ describe("Home", () => {
 
     expect(view.baseElement).toMatchSnapshot(); //Ceci est un snapshot, il permet de vérifier que le rendu est toujours le même
   });
+
+  afterAll(() => cleanup());
 });
