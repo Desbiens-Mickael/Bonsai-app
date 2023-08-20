@@ -51,7 +51,7 @@ describe("Home", () => {
       { wrapper: BrowserRouter } //On utilise le BrowserRouter pour éviter les erreurs liées aux routes
     );
 
-    expect(screen.getByText(/Bienvenue sur le site de tes/)).toBeVisible(); //On vérifie que le texte est bien affiché
+    expect(screen.getByText(/Bienvenue sur le site de test/)).toBeVisible(); //On vérifie que le texte est bien affiché
 
     expect(view.baseElement).toMatchSnapshot(); //Ceci est un snapshot, il permet de vérifier que le rendu est toujours le même
   });
